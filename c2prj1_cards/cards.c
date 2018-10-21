@@ -5,8 +5,8 @@
 
 
 void assert_card_valid(card_t c) {
-  assert ((2 <= c.value) && (c.value <= VALUE_ACE));
-  assert ((SPADES <= c.suit) && (c.suit <= CLUBS));
+  assert ((c.value >= 2) && (c.value <= VALUE_ACE));
+  assert ((c.suit >= SPADES) && (c.suit <= CLUBS));
 }
 
 const char * ranking_to_string(hand_ranking_t r) {
@@ -58,15 +58,34 @@ return EXIT_SUCCESS;
 void print_card(card_t c) {
   char a = value_letter(c);
   char b = suit_letter(c);
-  printf ("%c%c",a,b);
+  printf ("%c%c/n",a,b);
 }
 
 card_t card_from_letters(char value_let, char suit_let) {
   card_t temp;
-  temp.value = value_let;
-  temp.suit = suit_let;
-  assert ((2 <= temp.value) && (temp.value <= VALUE_ACE));
-  assert ((SPADES <= temp.suit) && (temp.suit <= CLUBS)); 
+  switch(value_let){
+  case '0': temp.value=10; break;
+  case '2': temp.value=2; break;
+  case '3': temp.value=3; break;
+  case '4': temp.value=4; break;
+  case '5': temp.value=5; break;
+  case '6': temp.value=6; break;
+  case '7': temp.value=7; break;
+  case '8': temp.value=8; break;
+  case '9': temp.value=9; break;
+  case 'J': temp.value=11; break;
+  case 'Q': temp.value=12; break;
+  case 'K': temp.value=13; break;
+  case 'A': temp.value=14; break;
+  default: temp.value=0; break;
+  }
+  switch(suit_let){
+    case 's': temp.suit=SPADES; break;
+    case 'h': temp.suit=HEARTS; break;
+    case 'd': temp.suit=DIAMONDS; break;
+    case 'c': temp.suit=CLUBS; break;
+  }
+  assert_card_valid(temp);
   return temp;
 }
 
