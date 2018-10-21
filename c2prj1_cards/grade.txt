@@ -1,6 +1,62 @@
-Grading at Sat Oct 20 15:03:15 UTC 2018
+Grading at Sun Oct 21 06:13:30 UTC 2018
 Compiling cards.c
 Testing card_from_letters
-Failed
+Passed
+Testing value_letter and suit_letter
+Passed
+Testing print_card
+Your print_card does not work the way I expect:
+Ks/n
+Kh/n
+Kd/n
+Kc/n
+As/n
+Ah/n
+Ad/n
+Ac/n
+2s/n
+2h/n
+2d/n
+2c/n
+3s/n
+3h/n
+3d/n
+3c/n
+4s/n
+4h/n
+4d/n
+4c/n
+5s/n
+5h/n
+5d/n
+5c/n
+6s/n
+6h/n
+6d/n
+6c/n
+7s/n
+7h/n
+7d/n
+7c/n
+8s/n
+8h/n
+8d/n
+8c/n
+9s/n
+9h/n
+9d/n
+9c/n
+0s/n
+0h/n
+0d/n
+0c/n
+Js/n
+Jh/n
+Jd/n
+Jc/n
+Qs/n
+Qh/n
+Qd/n
+Qc/n
 
 Overall Grade: FAILED
