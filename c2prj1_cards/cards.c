@@ -58,7 +58,7 @@ return EXIT_SUCCESS;
 void print_card(card_t c) {
   char a = value_letter(c);
   char b = suit_letter(c);
-  printf ("%c%c/n",a,b);
+  printf ("%c%c\n",a,b);
 }
 
 card_t card_from_letters(char value_let, char suit_let) {
