@@ -4,6 +4,19 @@
 
 void reverse(char * str) {
   //WRITE ME!
+  int i=0,n;
+  char temp, *p;
+  p=str;
+  while(*p!='\0'){
+    i++;
+    p++;
+  }
+  n=i;
+  for(i=0;i<n-1;i++,n--){
+    temp=str[i];
+    str[i]=str[n-1];
+    str[n-1]=temp;
+  }
 }
 
 int main(void) {
