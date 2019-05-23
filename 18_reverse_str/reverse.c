@@ -4,6 +4,7 @@
 
 void reverse(char * str) {
   //WRITE ME!
+  if(str!=NULL){
   int i=0,n;
   char temp, *p;
   p=str;
@@ -16,6 +17,7 @@ void reverse(char * str) {
     temp=str[i];
     str[i]=str[n-1];
     str[n-1]=temp;
+  }
   }
 }
 
