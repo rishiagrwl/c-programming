@@ -84,8 +84,9 @@ int straight(deck_t * hand, size_t index, suit_t fs, int n){
     if((hand->cards[i]->value)== (hand->cards[i-1]->value)-1 &&
        (fs==NUM_SUITS || (hand->cards[i]->suit)==fs))
       k++;
-    else if((hand->cards[i]->value)==(hand->cards[i-1]->value) &&
-	    (fs==NUM_SUITS || (hand->cards[i]->suit)==fs))
+    else if((hand->cards[i]->value)==(hand->cards[i-1]->value))
+      continue;
+    else if((hand->cards[i]->value)==(hand->cards[i-1]->value)-1 && fs!= NUM_SUITS)
       continue;
     else
       break;
