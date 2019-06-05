@@ -4,29 +4,123 @@
 #include <assert.h>
 
 int card_ptr_comp(const void * vp1, const void * vp2) {
-  return 0;
+  const card_t * const * cp1 = vp1;
+  const card_t * const * cp2 = vp2;
+  if(((*cp1)->value)-((*cp2)->value) == 0)
+    return ((*cp1)->suit)-((*cp2)->suit);
+  return ((*cp2)->value)-((*cp1)->value);
 }
 
 suit_t flush_suit(deck_t * hand) {
+  size_t i;
+  int s=0,d=0,h=0,c=0;
+  for(i=0; i< hand->n_cards ;i++){
+    switch((hand->cards[i]->suit)){
+    case SPADES:
+      s++;
+      break;
+    case DIAMONDS:
+      d++;
+      break;
+    case HEARTS:
+      h++;
+      break;
+    case CLUBS:
+      c++;
+      break;
+    case NUM_SUITS:
+      break;
+    }
+  }
+    if(s>=5)
+      return SPADES;
+    if(d>=5)
+      return DIAMONDS;
+    if(h>=5)
+      return HEARTS;
+    if(c>=5)
+      return CLUBS;
   return NUM_SUITS;
 }
 
 unsigned get_largest_element(unsigned * arr, size_t n) {
-  return 0;
+  size_t i;
+  unsigned max = arr[0];
+  for(i=0; i<n ; i++){
+    if(arr[i]>max)
+      max=arr[i];
+  }
+  return max;
 }
 
 size_t get_match_index(unsigned * match_counts, size_t n,unsigned n_of_akind){
-
-  return 0;
+  size_t i;
+  for(i=0 ; i<n ; i++){
+    if(match_counts[i]==n_of_akind)
+      break;
+  }
+  return i;
 }
+
+
 ssize_t  find_secondary_pair(deck_t * hand,
 			     unsigned * match_counts,
 			     size_t match_idx) {
+  size_t i;
+  for(i=0 ; i< hand->n_cards ; i++){
+    if((hand->cards[i]->value)!=(hand->cards[match_idx]->value) && match_counts[i]>1)
+      break;
+  }
+  if(i<hand->n_cards)
+    return i;
   return -1;
 }
 
+
+int straight(deck_t * hand, size_t index, suit_t fs, int n){
+  size_t i = index+1;
+  int k=0;
+  for(;i<(hand->n_cards);i++){
+    if((hand->cards[i]->value)== (hand->cards[i-1]->value)-1 &&
+       (fs==NUM_SUITS || (hand->cards[i]->suit)==fs))
+      k++;
+    else if((hand->cards[i]->value)==(hand->cards[i-1]->value))
+      continue;
+    else
+      break;
+    
+  }
+  if(k>=n)
+    return 1;
+  else
+    return 0;
+}
+
+int acelow(deck_t * hand, size_t index, suit_t fs){
+  size_t i= index;
+  int r=0;
+  if((hand->cards[i]->value)== VALUE_ACE){
+    for(; i<(hand->n_cards); i++){
+      if((hand->cards[i]->value)==5){
+	r=straight(hand, i, fs,3);
+	break;
+      }
+    }
+  }
+  if(r==1)
+    return 1;
+  else
+    return 0;
+}
+      
 int is_straight_at(deck_t * hand, size_t index, suit_t fs) {
-  return 0;
+   if(fs!=NUM_SUITS && (hand->cards[index]->suit)!=fs)
+    return 0;
+   if(straight(hand, index, fs, 4))
+	return 1;
+   else if(acelow(hand, index, fs))
+	return -1;
+   return 0;
 }
 
 hand_eval_t build_hand_from_match(deck_t * hand,
@@ -35,12 +129,59 @@ hand_eval_t build_hand_from_match(deck_t * hand,
 				  size_t idx) {
 
   hand_eval_t ans;
+  size_t i=0, j, k;
+   (ans.ranking)=what;
+  
+  for(j=idx;i<n;i++,j++)
+    (ans.cards[i])= (hand->cards[j]);
+  
+  if(what==FULL_HOUSE || what==TWO_PAIR){
+    for(j=1; j<(hand->n_cards); j++){
+      if((hand->cards[j]->value)==(hand->cards[j-1]->value) && (j!=idx+1 && j!=idx+2))
+	break;
+    }
+    for(k=j-1; k<=j; k++,i++)
+      (ans.cards[i])=(hand->cards[k]);
+    
+    if(what==TWO_PAIR){
+      for(k=0; k<(hand->n_cards); k++){
+	if(k!=idx && k!= j-1 && k!=j && k!= idx+1){
+	  (ans.cards[4])=(hand->cards[k]);
+	  break;
+	}
+      }
+    }
+  }
+  else{
+    for(j=0; j<idx; j++,i++)
+    (ans.cards[i])= (hand->cards[j]);
+
+  for(j=idx+n; i<5; j++,i++)
+    (ans.cards[i])= (hand->cards[j]);
+  }
   return ans;
 }
 
 
 int compare_hands(deck_t * hand1, deck_t * hand2) {
-
+  hand_eval_t h1,h2;
+  size_t i;
+  qsort(hand1->cards, hand1->n_cards, sizeof(hand1->cards[0]), card_ptr_comp);
+  qsort(hand2->cards, hand2->n_cards, sizeof(hand2->cards[0]), card_ptr_comp);
+  h1= evaluate_hand(hand1);
+  h2= evaluate_hand(hand2);
+  if(h1.ranking<h2.ranking)
+    return 1;
+  if(h1.ranking>h2.ranking)
+    return -1;
+  else{
+    for(i=0; i<5; i++){
+      if((h1.cards[i])->value > (h2.cards[i])->value)
+	return 1;
+      if((h1.cards[i])->value < (h2.cards[i])->value)
+	return -1;
+    }
+  }
   return 0;
 }
 
